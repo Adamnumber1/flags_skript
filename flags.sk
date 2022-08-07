@@ -1,279 +1,3 @@
-#/give Anorak_1 minecraft:splash_potion{CustomPotionEffects:[{Id:7,Amplifier:10,Duration:1}]} 1
-command /flags_setpotionitem:
-    permission: skript.op
-    trigger:
-        clear player's inventory
-        execute console command "/give %player% minecraft:splash_potion{CustomPotionEffects:[{Id:7,Amplifier:10,Duration:1}]} 1"
-        set {dmgpotion} to player's held item
-        clear player's inventory
-
-#/give Anorak_1 bow{Enchantments:[{id:power,lvl:50}],HideFlags:1} 1
-command /flags_setbowitem:
-    permission: skript.op
-    trigger:
-        clear player's inventory
-        execute console command "/give %player% bow{Enchantments:[{id:power,lvl:50}],HideFlags:1} 1"
-        set {instabow} to player's held item
-        clear player's inventory
-
-command /flags_setwhiteflag:
-    permission: skript.op
-    trigger:
-        clear player's inventory
-        execute console command "/give %player% minecraft:white_banner"
-        set {white_flag} to player's held item
-        clear player's inventory
-
-function spawnteam(team: integer, spawner: integer):
-    loop entries of team "IDList%{_team}%":
-        teleport loop-value to location at {spawn_location::%{_spawner}%}
-        set loop-value's gamemode to adventure
-        give loop-value {instabow}
-        give loop-value 16 arrow
-
-function spawngate(otvor: number):
-    loop 10 times:
-        set {_struct} to structure named "flags_gate%{_otvor}%"
-        if {gate_rotation::%loop-number%} is "Ne":
-            set rotation of structure {_struct} to NONE
-        if {gate_rotation::%loop-number%} is "Ano":
-            set rotation of structure {_struct} to clockwise 90
-        place structure {_struct} at {gate_location::%loop-number%}
-
-on click on a banner:
-    if block is white_banner:
-        if event-player's gamemode is adventure:
-            set event-block to air
-            add event-player to {flag_claimed::*}
-            play sound "block.note_block.bell" at volume 50 to player
-            give player {white_flag}
-
-on death of player:
-    if {flag_claimed::*} contains victim:
-        remove victim from {flag_claimed::*}
-        set block at victim's location to white banner
-    add victim's uuid to {deadplayers::*}
-    launch ball large coloured yellow fading to light green and black at victim's location with duration 0
-
-on respawn:
-    if {deadplayers::*} contains player's uuid:
-        clear player's inventory
-        set player's gamemode to spectator
-        teleport player to {spectatorlocation}
-
-on food bar change:
-    cancel event
-
-on walking on carpet:
-    if event-player's gamemode is adventure:
-        loop blocks in radius 0.5 around the event-block:
-            if loop-block is hopper:
-                if {flag_claimed::*} contains event-player:
-                    send "Gratuluji, ukořistil jsi vlajku" to event-player
-                    play sound "entity.firework_rocket.launch" at volume 50 to player
-                    launch ball large coloured green, lime and yellow fading to light green and black at player's location with duration 0.01
-                    remove event-player from {flag_claimed::*}
-                    add event-player to {flag_won::*}
-                    loop entries of team of event-player:
-                        set loop-value-2's gamemode to spectator
-
-on player move:
-    if {stop_players} is "True":
-        if {gaming_players::*} contains player:
-            cancel event
-
-command /flags_checklist:
-    permission: skript.op
-    trigger:
-        if size of {spawn_location::*} is 10:
-            send "Spawny: §a✔" to player
-        else:
-            send "Spawny: §4✕" to player
-        if size of {potion_locations::*} is 10:
-            send "Potiony: §a✔" to player
-        else:
-            send "Potiony: §4✕" to player
-        if size of  {flag_locations::*} is 5:
-            send "Vlajky: §a✔" to player
-        else:
-            send "Vlajky: §4✕" to player
-        if size of {gate_location::*} is 10:
-            send "Brány: §a✔" to player
-        else:
-            send "Brány: §4✕" to player
-        if {spectatorlocation} exists:
-            send "Spectator spawn: §a✔"
-        else:
-            send "Spectator spawn: §4✕"
-        if {introlocation} exists:
-            send "Intro lokace: §a✔" to player
-        else:
-            send "Intro lokace: §4✕" to player
-        if {lobbylocation} exists:
-            send "Lobby lokace: §a✔"
-        else:
-            send "Lobby lokace: §4✕"
-        if {dmgpotion} exists:
-            send "Potion pro spawner: §a✔"
-        else:
-            send "Potion pro spawner: §4✕"
-        if {white_flag} exists:
-            send "Vlajka do inventáře: §a✔"
-        else:
-            send "Vlajka do inventáře: §4✕"
-        if {instabow} exists:
-            send "Luk do inventáře: §a✔"
-        else:
-            send "Luk do inventáře: §4✕"
-
-command /flags_scorelist:
-    permission: skript.op
-    trigger:
-        loop 10 times:
-            send "Team %loop-number%:"
-            send {teamscore::%loop-number%}
-
-command /flags_scoreinit:
-    permission: skript.op
-    trigger:
-        set {teamscore::1} to 0
-        set {teamscore::2} to 0
-        set {teamscore::3} to 0
-        set {teamscore::4} to 0
-        set {teamscore::5} to 0
-        set {teamscore::6} to 0
-        set {teamscore::7} to 0
-        set {teamscore::8} to 0
-        set {teamscore::9} to 0
-        set {teamscore::10} to 0
-
-command /flags_forcestop:
-    permission: skript.op
-    trigger:
-        execute console command "/gamerule keepInventory false"
-        set {game_status} to "end"
-
-command /flags_setintroloc:
-    permission: skript.op
-    trigger:
-        set {introlocation} to player's location
-        send "Lokace Intra nastavena"
-
-command /flags_setlobbyloc:
-    permission: skript.op
-    trigger:
-        set {lobbylocation} to player's location
-        send "Lokace Lobby nastavena"
-
-command /flags_setgate <number> <text>:
-    description: Set one of the gate positions
-    usage: /spawnerset <id> <otočení: Ano/Ne>
-    permission: skript.op
-    trigger:
-        if arg-2 is "Ano" or "Ne":
-            if arg-1 < 11:
-                if arg-1 > 0:
-                    set {gate_location::%arg-1%} to player's location
-                    set {gate_rotation::%arg-1%} to arg-2
-                    send "Set gate location %arg-1%" to player
-                if arg-1 < 0:
-                    send "You must specify a number from 1-10"
-            if arg-1 > 10:
-                send "You can only set 10 gate positions"
-        else:
-            send "Nastavení rotace musí být Ano nebo Ne"
-
-command /flags_setflag:
-    permission: skript.op
-    description: Set flag location
-    executable by: players
-    trigger:
-        add player's location to {flag_locations::*}
-
-command /flags_listflags:
-    description: List flag locations
-    usage: /flaglist
-    permission: skript.op
-    trigger:
-        loop {flag_locations::*}:
-            send "&4%loop-index%: &7%loop-value%" to player
-
-command /flags_removeflags:
-    description: Remove all flags
-    permission: skript.op
-    trigger:
-        clear {flag_locations::*}
-
-command /flags_setspawner <number>:
-    description: Set one of the spawn positions
-    permission: skript.op
-    trigger:
-        if arg-1 < 11:
-            if arg-1 > 0:
-                set {spawn_location::%arg-1%} to player's location
-                send "Set spawn location %arg-1%" to player
-            if arg-1 < 0:
-                send "You must specify a number from 1-10"
-        if arg-1 > 10:
-            send "You can only set 10 spawn positions"
-
-command /flags_listspawners:
-    description: List all spawn positions
-    permission: skript.op
-    trigger:
-        loop 10 times:
-            send "Spawn point %loop-number%:" to player
-            send {spawn_location::%loop-number%} to player
-
-command /flags_removespawners:
-    description: Remove all spawn positions
-    permission: skript.op
-    trigger:
-        loop 10 times:
-            clear {spawn_locations::%loop-number%}
-        send "Removed all spawn locations"
-
-command /flags_setpotion:
-    description: Set potion location
-    permission: skript.op
-    trigger:
-        add player's location to {potion_locations::*}
-        send "Potion location set"
-
-command /flags_listpotions:
-    description: List potion locations
-    usage: /potionlist
-    permission: skript.op
-    trigger:
-        send "Potion list:"
-        loop {potion_locations::*}:
-            send "&4%loop-index%: &7%loop-value%" to player
-
-command /flags_removepotions:
-    description: Remove all potions
-    usage: /potionremoveall
-    permission: skript.op
-    trigger:
-        clear {potion_locations::*}
-        send "Removed ALL potion locations"
-
-command /flags_listclaims:
-    description: list claims
-    permission: skript.op
-    trigger:
-        send {flag_claimed::*} to player
-
-command /flags_setspectatorspawn:
-    permission: skript.op
-    trigger:
-        set {spectatorlocation} to player's location
-        send "Spectator nastaven"
-
-command /flags_nextround:
-    permission: skript.op
-    trigger:
-        set {game_status} to "next"
-
 command /minigame_flags_start:
     description: Zapni celou minihru flags
     usage: /minigame_flags_start
@@ -587,3 +311,279 @@ command /minigame_flags_start:
                 wait 3 seconds
                 teleport {gaming_players::*} to {lobbylocation}
                 set {gaming_players::*}'s gamemode to adventure
+
+#/give Anorak_1 minecraft:splash_potion{CustomPotionEffects:[{Id:7,Amplifier:10,Duration:1}]} 1
+command /flags_setpotionitem:
+    permission: skript.op
+    trigger:
+        clear player's inventory
+        execute console command "/give %player% minecraft:splash_potion{CustomPotionEffects:[{Id:7,Amplifier:10,Duration:1}]} 1"
+        set {dmgpotion} to player's held item
+        clear player's inventory
+
+#/give Anorak_1 bow{Enchantments:[{id:power,lvl:50}],HideFlags:1} 1
+command /flags_setbowitem:
+    permission: skript.op
+    trigger:
+        clear player's inventory
+        execute console command "/give %player% bow{Enchantments:[{id:power,lvl:50}],HideFlags:1} 1"
+        set {instabow} to player's held item
+        clear player's inventory
+
+command /flags_setwhiteflag:
+    permission: skript.op
+    trigger:
+        clear player's inventory
+        execute console command "/give %player% minecraft:white_banner"
+        set {white_flag} to player's held item
+        clear player's inventory
+
+function spawnteam(team: integer, spawner: integer):
+    loop entries of team "IDList%{_team}%":
+        teleport loop-value to location at {spawn_location::%{_spawner}%}
+        set loop-value's gamemode to adventure
+        give loop-value {instabow}
+        give loop-value 16 arrow
+
+function spawngate(otvor: number):
+    loop 10 times:
+        set {_struct} to structure named "flags_gate%{_otvor}%"
+        if {gate_rotation::%loop-number%} is "Ne":
+            set rotation of structure {_struct} to NONE
+        if {gate_rotation::%loop-number%} is "Ano":
+            set rotation of structure {_struct} to clockwise 90
+        place structure {_struct} at {gate_location::%loop-number%}
+
+on click on a banner:
+    if block is white_banner:
+        if event-player's gamemode is adventure:
+            set event-block to air
+            add event-player to {flag_claimed::*}
+            play sound "block.note_block.bell" at volume 50 to player
+            give player {white_flag}
+
+on death of player:
+    if {flag_claimed::*} contains victim:
+        remove victim from {flag_claimed::*}
+        set block at victim's location to white banner
+    add victim's uuid to {deadplayers::*}
+    launch ball large coloured yellow fading to light green and black at victim's location with duration 0
+
+on respawn:
+    if {deadplayers::*} contains player's uuid:
+        clear player's inventory
+        set player's gamemode to spectator
+        teleport player to {spectatorlocation}
+
+on food bar change:
+    cancel event
+
+on walking on carpet:
+    if event-player's gamemode is adventure:
+        loop blocks in radius 0.5 around the event-block:
+            if loop-block is hopper:
+                if {flag_claimed::*} contains event-player:
+                    send "Gratuluji, ukořistil jsi vlajku" to event-player
+                    play sound "entity.firework_rocket.launch" at volume 50 to player
+                    launch ball large coloured green, lime and yellow fading to light green and black at player's location with duration 0.01
+                    remove event-player from {flag_claimed::*}
+                    add event-player to {flag_won::*}
+                    loop entries of team of event-player:
+                        set loop-value-2's gamemode to spectator
+
+on player move:
+    if {stop_players} is "True":
+        if {gaming_players::*} contains player:
+            cancel event
+
+command /flags_checklist:
+    permission: skript.op
+    trigger:
+        if size of {spawn_location::*} is 10:
+            send "Spawny: §a✔" to player
+        else:
+            send "Spawny: §4✕" to player
+        if size of {potion_locations::*} is 10:
+            send "Potiony: §a✔" to player
+        else:
+            send "Potiony: §4✕" to player
+        if size of  {flag_locations::*} is 5:
+            send "Vlajky: §a✔" to player
+        else:
+            send "Vlajky: §4✕" to player
+        if size of {gate_location::*} is 10:
+            send "Brány: §a✔" to player
+        else:
+            send "Brány: §4✕" to player
+        if {spectatorlocation} exists:
+            send "Spectator spawn: §a✔"
+        else:
+            send "Spectator spawn: §4✕"
+        if {introlocation} exists:
+            send "Intro lokace: §a✔" to player
+        else:
+            send "Intro lokace: §4✕" to player
+        if {lobbylocation} exists:
+            send "Lobby lokace: §a✔"
+        else:
+            send "Lobby lokace: §4✕"
+        if {dmgpotion} exists:
+            send "Potion pro spawner: §a✔"
+        else:
+            send "Potion pro spawner: §4✕"
+        if {white_flag} exists:
+            send "Vlajka do inventáře: §a✔"
+        else:
+            send "Vlajka do inventáře: §4✕"
+        if {instabow} exists:
+            send "Luk do inventáře: §a✔"
+        else:
+            send "Luk do inventáře: §4✕"
+
+command /flags_scorelist:
+    permission: skript.op
+    trigger:
+        loop 10 times:
+            send "Team %loop-number%:"
+            send {teamscore::%loop-number%}
+
+command /flags_scoreinit:
+    permission: skript.op
+    trigger:
+        set {teamscore::1} to 0
+        set {teamscore::2} to 0
+        set {teamscore::3} to 0
+        set {teamscore::4} to 0
+        set {teamscore::5} to 0
+        set {teamscore::6} to 0
+        set {teamscore::7} to 0
+        set {teamscore::8} to 0
+        set {teamscore::9} to 0
+        set {teamscore::10} to 0
+
+command /flags_forcestop:
+    permission: skript.op
+    trigger:
+        execute console command "/gamerule keepInventory false"
+        set {game_status} to "end"
+
+command /flags_setintroloc:
+    permission: skript.op
+    trigger:
+        set {introlocation} to player's location
+        send "Lokace Intra nastavena"
+
+command /flags_setlobbyloc:
+    permission: skript.op
+    trigger:
+        set {lobbylocation} to player's location
+        send "Lokace Lobby nastavena"
+
+command /flags_setgate <number> <text>:
+    description: Set one of the gate positions
+    usage: /spawnerset <id> <otočení: Ano/Ne>
+    permission: skript.op
+    trigger:
+        if arg-2 is "Ano" or "Ne":
+            if arg-1 < 11:
+                if arg-1 > 0:
+                    set {gate_location::%arg-1%} to player's location
+                    set {gate_rotation::%arg-1%} to arg-2
+                    send "Set gate location %arg-1%" to player
+                if arg-1 < 0:
+                    send "You must specify a number from 1-10"
+            if arg-1 > 10:
+                send "You can only set 10 gate positions"
+        else:
+            send "Nastavení rotace musí být Ano nebo Ne"
+
+command /flags_setflag:
+    permission: skript.op
+    description: Set flag location
+    executable by: players
+    trigger:
+        add player's location to {flag_locations::*}
+
+command /flags_listflags:
+    description: List flag locations
+    usage: /flaglist
+    permission: skript.op
+    trigger:
+        loop {flag_locations::*}:
+            send "&4%loop-index%: &7%loop-value%" to player
+
+command /flags_removeflags:
+    description: Remove all flags
+    permission: skript.op
+    trigger:
+        clear {flag_locations::*}
+
+command /flags_setspawner <number>:
+    description: Set one of the spawn positions
+    permission: skript.op
+    trigger:
+        if arg-1 < 11:
+            if arg-1 > 0:
+                set {spawn_location::%arg-1%} to player's location
+                send "Set spawn location %arg-1%" to player
+            if arg-1 < 0:
+                send "You must specify a number from 1-10"
+        if arg-1 > 10:
+            send "You can only set 10 spawn positions"
+
+command /flags_listspawners:
+    description: List all spawn positions
+    permission: skript.op
+    trigger:
+        loop 10 times:
+            send "Spawn point %loop-number%:" to player
+            send {spawn_location::%loop-number%} to player
+
+command /flags_removespawners:
+    description: Remove all spawn positions
+    permission: skript.op
+    trigger:
+        loop 10 times:
+            clear {spawn_locations::%loop-number%}
+        send "Removed all spawn locations"
+
+command /flags_setpotion:
+    description: Set potion location
+    permission: skript.op
+    trigger:
+        add player's location to {potion_locations::*}
+        send "Potion location set"
+
+command /flags_listpotions:
+    description: List potion locations
+    usage: /potionlist
+    permission: skript.op
+    trigger:
+        send "Potion list:"
+        loop {potion_locations::*}:
+            send "&4%loop-index%: &7%loop-value%" to player
+
+command /flags_removepotions:
+    description: Remove all potions
+    usage: /potionremoveall
+    permission: skript.op
+    trigger:
+        clear {potion_locations::*}
+        send "Removed ALL potion locations"
+
+command /flags_listclaims:
+    description: list claims
+    permission: skript.op
+    trigger:
+        send {flag_claimed::*} to player
+
+command /flags_setspectatorspawn:
+    permission: skript.op
+    trigger:
+        set {spectatorlocation} to player's location
+        send "Spectator nastaven"
+
+command /flags_nextround:
+    permission: skript.op
+    trigger:
+        set {game_status} to "next"
