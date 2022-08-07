@@ -1,4 +1,4 @@
-command /updateskript <text> <text>:
+command /supdateskript <text> <text>:
     usage: /updateskript <directory/name> <URL>
     permission: skript.op
     trigger:
@@ -7,20 +7,20 @@ command /updateskript <text> <text>:
         wait 10 seconds
         make player execute command "/skript reload scripts"
 
-command /updatefile <text> <text>:
+command /supdatefile <text> <text>:
     usage: /updatefile <directory/name> <URL>
     permission: skript.op
     trigger:
         download from url arg-2 to file path arg-1:
             send "Updated file from GitHub"
 
-command /pwd:
+command /spwd:
     permission: skript.op
     trigger:
         send "§7Files in directory §4%{workingdirectory}%§7: (%size of all files and directories of dir path {workingdirectory}%)"
         send all files and directories of dir path {workingdirectory} to player
 
-command /cd <text>:
+command /scd <text>:
     permission: skript.op
     trigger:
         if arg-1 is "home":
@@ -28,7 +28,7 @@ command /cd <text>:
         else:
             set {workingdirectory} to arg-1
 
-command /rm <text>:
+command /srm <text>:
     permission: skript.op
     trigger:
         delete file path arg-1
