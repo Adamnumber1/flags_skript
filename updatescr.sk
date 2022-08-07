@@ -1,0 +1,29 @@
+command /updateskript <text> <text>:
+    usage: /updateskript <directory/name> <URL>
+    permission: skript.op
+    trigger:
+        fetch url arg-2:
+            create file path arg-1 with content fetched url content
+        wait 1 second
+        make player execute command "/skript reload %arg-1%"
+
+command /updatefile <text> <text>:
+    usage: /updatefile <directory/name> <URL>
+    permission: skript.op
+    trigger:
+        download from url arg-2 to file path arg-1:
+            send "Updated file from GitHub"
+
+command /pwd:
+    permission: skript.op
+    trigger:
+        send "§7Files in directory §4%{workingdirectory}%§7: (%size of all files and directories of dir path {workingdirectory}%)"
+        send all files and directories of dir path {workingdirectory} to player
+
+command /cd <text>:
+    permission: skript.op
+    trigger:
+        if arg-1 is "home":
+            set {workingdirectory} to "/home/container/"
+        else:
+            set {workingdirectory} to arg-1
