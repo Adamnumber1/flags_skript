@@ -1,0 +1,589 @@
+#/give Anorak_1 minecraft:splash_potion{CustomPotionEffects:[{Id:7,Amplifier:10,Duration:1}]} 1
+command /flags_setpotionitem:
+    permission: skript.op
+    trigger:
+        clear player's inventory
+        execute console command "/give %player% minecraft:splash_potion{CustomPotionEffects:[{Id:7,Amplifier:10,Duration:1}]} 1"
+        set {dmgpotion} to player's held item
+        clear player's inventory
+
+#/give Anorak_1 bow{Enchantments:[{id:power,lvl:50}],HideFlags:1} 1
+command /flags_setbowitem:
+    permission: skript.op
+    trigger:
+        clear player's inventory
+        execute console command "/give %player% bow{Enchantments:[{id:power,lvl:50}],HideFlags:1} 1"
+        set {instabow} to player's held item
+        clear player's inventory
+
+command /flags_setwhiteflag:
+    permission: skript.op
+    trigger:
+        clear player's inventory
+        execute console command "/give %player% minecraft:white_banner"
+        set {white_flag} to player's held item
+        clear player's inventory
+
+function spawnteam(team: integer, spawner: integer):
+    loop entries of team "IDList%{_team}%":
+        teleport loop-value to location at {spawn_location::%{_spawner}%}
+        set loop-value's gamemode to adventure
+        give loop-value {instabow}
+        give loop-value 16 arrow
+
+function spawngate(otvor: number):
+    loop 10 times:
+        set {_struct} to structure named "flags_gate%{_otvor}%"
+        if {gate_rotation::%loop-number%} is "Ne":
+            set rotation of structure {_struct} to NONE
+        if {gate_rotation::%loop-number%} is "Ano":
+            set rotation of structure {_struct} to clockwise 90
+        place structure {_struct} at {gate_location::%loop-number%}
+
+on click on a banner:
+    if block is white_banner:
+        if event-player's gamemode is adventure:
+            set event-block to air
+            add event-player to {flag_claimed::*}
+            play sound "block.note_block.bell" at volume 50 to player
+            give player {white_flag}
+
+on death of player:
+    if {flag_claimed::*} contains victim:
+        remove victim from {flag_claimed::*}
+        set block at victim's location to white banner
+    add victim's uuid to {deadplayers::*}
+    launch ball large coloured yellow fading to light green and black at victim's location with duration 0
+
+on respawn:
+    if {deadplayers::*} contains player's uuid:
+        clear player's inventory
+        set player's gamemode to spectator
+        teleport player to {spectatorlocation}
+
+on food bar change:
+    cancel event
+
+on walking on carpet:
+    if event-player's gamemode is adventure:
+        loop blocks in radius 0.5 around the event-block:
+            if loop-block is hopper:
+                if {flag_claimed::*} contains event-player:
+                    send "Gratuluji, ukořistil jsi vlajku" to event-player
+                    play sound "entity.firework_rocket.launch" at volume 50 to player
+                    launch ball large coloured green, lime and yellow fading to light green and black at player's location with duration 0.01
+                    remove event-player from {flag_claimed::*}
+                    add event-player to {flag_won::*}
+                    loop entries of team of event-player:
+                        set loop-value-2's gamemode to spectator
+
+on player move:
+    if {stop_players} is "True":
+        if {gaming_players::*} contains player:
+            cancel event
+
+command /flags_checklist:
+    permission: skript.op
+    trigger:
+        if size of {spawn_location::*} is 10:
+            send "Spawny: §a✔" to player
+        else:
+            send "Spawny: §4✕" to player
+        if size of {potion_locations::*} is 10:
+            send "Potiony: §a✔" to player
+        else:
+            send "Potiony: §4✕" to player
+        if size of  {flag_locations::*} is 5:
+            send "Vlajky: §a✔" to player
+        else:
+            send "Vlajky: §4✕" to player
+        if size of {gate_location::*} is 10:
+            send "Brány: §a✔" to player
+        else:
+            send "Brány: §4✕" to player
+        if {spectatorlocation} exists:
+            send "Spectator spawn: §a✔"
+        else:
+            send "Spectator spawn: §4✕"
+        if {introlocation} exists:
+            send "Intro lokace: §a✔" to player
+        else:
+            send "Intro lokace: §4✕" to player
+        if {lobbylocation} exists:
+            send "Lobby lokace: §a✔"
+        else:
+            send "Lobby lokace: §4✕"
+        if {dmgpotion} exists:
+            send "Potion pro spawner: §a✔"
+        else:
+            send "Potion pro spawner: §4✕"
+        if {white_flag} exists:
+            send "Vlajka do inventáře: §a✔"
+        else:
+            send "Vlajka do inventáře: §4✕"
+        if {instabow} exists:
+            send "Luk do inventáře: §a✔"
+        else:
+            send "Luk do inventáře: §4✕"
+
+command /flags_scorelist:
+    permission: skript.op
+    trigger:
+        loop 10 times:
+            send "Team %loop-number%:"
+            send {teamscore::%loop-number%}
+
+command /flags_scoreinit:
+    permission: skript.op
+    trigger:
+        set {teamscore::1} to 0
+        set {teamscore::2} to 0
+        set {teamscore::3} to 0
+        set {teamscore::4} to 0
+        set {teamscore::5} to 0
+        set {teamscore::6} to 0
+        set {teamscore::7} to 0
+        set {teamscore::8} to 0
+        set {teamscore::9} to 0
+        set {teamscore::10} to 0
+
+command /flags_forcestop:
+    permission: skript.op
+    trigger:
+        execute console command "/gamerule keepInventory false"
+        set {game_status} to "end"
+
+command /flags_setintroloc:
+    permission: skript.op
+    trigger:
+        set {introlocation} to player's location
+        send "Lokace Intra nastavena"
+
+command /flags_setlobbyloc:
+    permission: skript.op
+    trigger:
+        set {lobbylocation} to player's location
+        send "Lokace Lobby nastavena"
+
+command /flags_setgate <number> <text>:
+    description: Set one of the gate positions
+    usage: /spawnerset <id> <otočení: Ano/Ne>
+    permission: skript.op
+    trigger:
+        if arg-2 is "Ano" or "Ne":
+            if arg-1 < 11:
+                if arg-1 > 0:
+                    set {gate_location::%arg-1%} to player's location
+                    set {gate_rotation::%arg-1%} to arg-2
+                    send "Set gate location %arg-1%" to player
+                if arg-1 < 0:
+                    send "You must specify a number from 1-10"
+            if arg-1 > 10:
+                send "You can only set 10 gate positions"
+        else:
+            send "Nastavení rotace musí být Ano nebo Ne"
+
+command /flags_setflag:
+    permission: skript.op
+    description: Set flag location
+    executable by: players
+    trigger:
+        add player's location to {flag_locations::*}
+
+command /flags_listflags:
+    description: List flag locations
+    usage: /flaglist
+    permission: skript.op
+    trigger:
+        loop {flag_locations::*}:
+            send "&4%loop-index%: &7%loop-value%" to player
+
+command /flags_removeflags:
+    description: Remove all flags
+    permission: skript.op
+    trigger:
+        clear {flag_locations::*}
+
+command /flags_setspawner <number>:
+    description: Set one of the spawn positions
+    permission: skript.op
+    trigger:
+        if arg-1 < 11:
+            if arg-1 > 0:
+                set {spawn_location::%arg-1%} to player's location
+                send "Set spawn location %arg-1%" to player
+            if arg-1 < 0:
+                send "You must specify a number from 1-10"
+        if arg-1 > 10:
+            send "You can only set 10 spawn positions"
+
+command /flags_listspawners:
+    description: List all spawn positions
+    permission: skript.op
+    trigger:
+        loop 10 times:
+            send "Spawn point %loop-number%:" to player
+            send {spawn_location::%loop-number%} to player
+
+command /flags_removespawners:
+    description: Remove all spawn positions
+    permission: skript.op
+    trigger:
+        loop 10 times:
+            clear {spawn_locations::%loop-number%}
+        send "Removed all spawn locations"
+
+command /flags_setpotion:
+    description: Set potion location
+    permission: skript.op
+    trigger:
+        add player's location to {potion_locations::*}
+        send "Potion location set"
+
+command /flags_listpotions:
+    description: List potion locations
+    usage: /potionlist
+    permission: skript.op
+    trigger:
+        send "Potion list:"
+        loop {potion_locations::*}:
+            send "&4%loop-index%: &7%loop-value%" to player
+
+command /flags_removepotions:
+    description: Remove all potions
+    usage: /potionremoveall
+    permission: skript.op
+    trigger:
+        clear {potion_locations::*}
+        send "Removed ALL potion locations"
+
+command /flags_listclaims:
+    description: list claims
+    permission: skript.op
+    trigger:
+        send {flag_claimed::*} to player
+
+command /flags_setspectatorspawn:
+    permission: skript.op
+    trigger:
+        set {spectatorlocation} to player's location
+        send "Spectator nastaven"
+
+command /flags_nextround:
+    permission: skript.op
+    trigger:
+        set {game_status} to "next"
+
+command /minigame_flags_start:
+    description: Zapni celou minihru flags
+    usage: /minigame_flags_start
+    executable by: the console and players
+    permission: skript.op
+    trigger:
+        execute console command "/gamerule keepInventory true"
+        clear {gaming_players::*}
+        loop 10 times:
+            loop entries of team "IDList%loop-number%":
+                add loop-value-2 to {gaming_players::*}
+        broadcast "Načítám minihru Vlajky"
+        send title "§2Vlajky" to all players
+        set {game_status} to "init"
+        set {game_on} to "True"
+        wait 2 seconds
+        send subtitle "Teleportuji" to all players
+        wait 1 second
+        set {intro} to "True"
+        set gamemode of {gaming_players::*} to adventure
+        teleport {gaming_players::*} to {introlocation}
+        set {stop_players} to "True"
+        hide {gaming_players::*}
+        wait 1 seconds
+        send "§e----------- Vlajky -----------" to {gaming_players::*}
+        send " V této minihře máte za úkol, jako první získat vlajku na středu, kterou vezmene pravím kliknutím a donést jí domů, ale pozor, protivník tě může dát na jednu rádu lukem, proto jsou po stranách instakill potiony, který můžeš použít jako obranu." to {gaming_players::*}
+        wait 15 seconds
+        set {stop_players} to "False"
+        reveal {gaming_players::*}
+
+        while {game_on} is "True":
+            if {game_status} is "init":   # kód před prvním startem
+
+                # procesy před startem
+
+                clear {flag_won::*}
+                set {teamscore::1} to 0
+                set {teamscore::2} to 0
+                set {teamscore::3} to 0
+                set {teamscore::4} to 0
+                set {teamscore::5} to 0
+                set {teamscore::6} to 0
+                set {teamscore::7} to 0
+                set {teamscore::8} to 0
+                set {teamscore::9} to 0
+                set {teamscore::10} to 0
+
+
+                # //procesy před startem
+
+                set {flags_kola} to 1
+                clear inventory of all players
+                wait 20 ticks
+                send title "§4§l1. KOLO" to all players
+
+                if {flags_kola} is 1:
+                    spawngate(3)
+                    spawnteam(1,1)
+                    spawnteam(2,2)
+                    spawnteam(3,3)
+                    spawnteam(10,4)
+                    spawnteam(4,5)
+                    spawnteam(9,6)
+                    spawnteam(5,7)
+                    spawnteam(8,8)
+                    spawnteam(6,9)
+                    spawnteam(7,10)
+
+                    loop {flag_locations::*}:
+                        set block at loop-value to white banner
+
+
+                    loop {potion_locations::*}:
+                        drop {dmgpotion} named "§4Insta-kill potion" at loop-value
+
+                    set {game_status} to "playing"
+
+                    set {flags_timer} to {čas_kola}
+
+                wait 5 seconds
+                send title "§4§l%{flags_kola}%. KOLO" with subtitle "3" to all players
+                play sound "block.note_block.bell" at volume 50 to all players
+                wait 1 second
+                send title "§4§l%{flags_kola}%. KOLO" with subtitle "2" to all players
+                play sound "block.note_block.bell" at volume 50 to all players
+                spawngate(2)
+                wait 1 second
+                send title "§4§l%{flags_kola}%. KOLO" with subtitle "1" to all players
+                play sound "block.note_block.bell" at volume 50 to all players
+                wait 1 second
+                send title "GO" with subtitle "" to all players
+                play sound "block.note_block.bell" at volume 50 with pitch 18 to all players
+                spawngate(1)
+
+
+            if {game_status} is "next":
+
+                loop {flag_locations::*}:
+                    loop all blocks in radius 35 around loop-value-1:
+                        if loop-value-2 is banner:
+                            set block at loop-value-2 to air
+                loop 10 times:
+                    loop entries of team "IDList%loop-number%":
+                        if {flag_won::*} contains loop-value-2:
+                            set {teamscore::%loop-number-1%} to {teamscore::%loop-number-1%} + 1
+                clear inventory of all players
+                loop {potion_locations::*}:
+                    loop all entities in radius 4 around loop-value-1:
+                        kill loop-value-2
+
+                set {flags_kola} to {flags_kola} + 1
+
+
+                clear {flag_won::*}
+                spawngate(3)
+
+                if {flags_kola} is 2:
+
+                    spawnteam(2,1)
+                    spawnteam(3,2)
+                    spawnteam(1,3)
+                    spawnteam(7,4)
+                    spawnteam(8,5)
+                    spawnteam(6,6)
+                    spawnteam(9,7)
+                    spawnteam(5,8)
+                    spawnteam(4,9)
+                    spawnteam(10,10)
+
+                    loop {flag_locations::*}:
+                        set block at loop-value to white banner
+
+                    loop {potion_locations::*}:
+                        drop {dmgpotion} named "§4Insta-kill potion" at loop-value
+
+                    set {game_status} to "playing"
+
+                if {flags_kola} is 3:
+                    spawnteam(6,1)
+                    spawnteam(9,2)
+                    spawnteam(8,3)
+                    spawnteam(7,4)
+                    spawnteam(3,5)
+                    spawnteam(1,6)
+                    spawnteam(4,7)
+                    spawnteam(2,8)
+                    spawnteam(5,9)
+                    spawnteam(10,10)
+                    loop {flag_locations::*}:
+                        set block at loop-value to white banner
+                    loop {potion_locations::*}:
+                        drop {dmgpotion} named "§4Insta-kill potion" at loop-value
+                    set {game_status} to "playing"
+
+                if {flags_kola} is 4:
+                    spawnteam(10,1)
+                    spawnteam(6,2)
+                    spawnteam(2,3)
+                    spawnteam(5,4)
+                    spawnteam(3,5)
+                    spawnteam(4,6)
+                    spawnteam(1,7)
+                    spawnteam(8,8)
+                    spawnteam(7,9)
+                    spawnteam(9,10)
+                    loop {flag_locations::*}:
+                        set block at loop-value to white banner
+                    loop {potion_locations::*}:
+                        drop {dmgpotion} named "§4Insta-kill potion" at loop-value
+                    set {game_status} to "playing"
+
+                if {flags_kola} is 5:
+                    spawnteam(5,1)
+                    spawnteam(3,2)
+                    spawnteam(6,3)
+                    spawnteam(2,4)
+                    spawnteam(7,5)
+                    spawnteam(10,6)
+                    spawnteam(8,7)
+                    spawnteam(9,8)
+                    spawnteam(4,9)
+                    spawnteam(1,10)
+                    loop {flag_locations::*}:
+                        set block at loop-value to white banner
+                    loop {potion_locations::*}:
+                        drop {dmgpotion} named "§4Insta-kill potion" at loop-value
+                    set {game_status} to "playing"
+
+                if {flags_kola} is 6:
+                    spawnteam(1,1)
+                    spawnteam(9,2)
+                    spawnteam(10,3)
+                    spawnteam(8,4)
+                    spawnteam(2,5)
+                    spawnteam(7,6)
+                    spawnteam(3,7)
+                    spawnteam(6,8)
+                    spawnteam(4,9)
+                    spawnteam(5,10)
+                    loop {flag_locations::*}:
+                        set block at loop-value to white banner
+                    loop {potion_locations::*}:
+                        drop {dmgpotion} named "§4Insta-kill potion" at loop-value
+                    set {game_status} to "playing"
+
+                if {flags_kola} is 7:
+                    spawnteam(5,1)
+                    spawnteam(1,2)
+                    spawnteam(6,3)
+                    spawnteam(4,4)
+                    spawnteam(7,5)
+                    spawnteam(3,6)
+                    spawnteam(8,7)
+                    spawnteam(2,8)
+                    spawnteam(9,9)
+                    spawnteam(10,10)
+                    loop {flag_locations::*}:
+                        set block at loop-value to white banner
+                    loop {potion_locations::*}:
+                        drop {dmgpotion} named "§4Insta-kill potion" at loop-value
+                    set {game_status} to "playing"
+
+                if {flags_kola} is 8:
+                    spawnteam(5,1)
+                    spawnteam(6,2)
+                    spawnteam(1,3)
+                    spawnteam(10,4)
+                    spawnteam(2,5)
+                    spawnteam(9,6)
+                    spawnteam(3,7)
+                    spawnteam(8,8)
+                    spawnteam(4,9)
+                    spawnteam(7,10)
+                    loop {flag_locations::*}:
+                        set block at loop-value to white banner
+                    loop {potion_locations::*}:
+                        drop {dmgpotion} named "§4Insta-kill potion" at loop-value
+                    set {game_status} to "playing"
+
+                if {flags_kola} is 9:
+                    spawnteam(9,1)
+                    spawnteam(3,2)
+                    spawnteam(10,3)
+                    spawnteam(2,4)
+                    spawnteam(6,5)
+                    spawnteam(1,6)
+                    spawnteam(7,7)
+                    spawnteam(5,8)
+                    spawnteam(8,9)
+                    spawnteam(4,10)
+                    loop {flag_locations::*}:
+                        set block at loop-value to white banner
+                    loop {potion_locations::*}:
+                        drop {dmgpotion} named "§4Insta-kill potion" at loop-value
+                    set {game_status} to "playing"
+                if {flags_kola} is 10:
+                    set {game_status} to "end"
+                else:
+
+                    send title "§4§l%{flags_kola}%. KOLO" to all players
+                    wait 5 second
+                    send title "§4§l%{flags_kola}%. KOLO" with subtitle "3" to all players
+                    play sound "block.note_block.bell" at volume 50 to all players
+                    wait 1 second
+                    send title "§4§l%{flags_kola}%. KOLO" with subtitle "2" to all players
+                    play sound "block.note_block.bell" at volume 50 to all players
+                    spawngate(2)
+                    wait 1 second
+                    send title "§4§l%{flags_kola}%. KOLO" with subtitle "1" to all players
+                    play sound "block.note_block.bell" at volume 50 to all players
+                    wait 1 second
+                    send title "GO" with subtitle "" to all players
+                    play sound "block.note_block.bell" at volume 50 with pitch 18 to all players
+                    spawngate(1)
+
+                set {flags_timer} to {čas_kola} # NASTAVENÍ ČASU
+
+            if {game_status} is "playing":   # kód kontroly konce kola
+                send action bar "§4§lČas: §7%{flags_timer}%" to all players
+                set {flags_timer} to {flags_timer} - 1
+                wait 1 second
+                if {flags_timer} is 0:
+                    send title "§4§lDošel čas!" to all players
+                    set {gaming_players::*}'s gamemode to spectator
+                    set {game_status} to "next"
+                    wait 5 seconds
+
+                if size of {flag_won::*} is 5:
+                    set {game_status} to "next"
+                    set {gaming_players::*}'s gamemode to spectator
+                    wait 1 second
+                    send title "§a§lKonec kola!" to all players
+                    wait 5 seconds
+
+            if {game_status} is "end":
+                send "game end"
+                send title "&4Konec hry" to all players
+                # VYHODNOCENÍ BODŮ
+
+                loop 10 times:
+                    execute console command "/scoreboard players add @a[scores={IDlist=%loop-number%}] Win %{teamscore::%loop-number%}%"
+                    if loop-number is 10:
+                        execute console command "/scoreboard players add @a[scores={IDlist=20}] Win %{teamscore::%loop-number%}%"
+                    else:
+                        execute console command "/scoreboard players add @a[scores={IDlist=1%loop-number%}] Win %{teamscore::%loop-number%}%"
+
+                set {game_on} to "False"
+                send "game stop"
+                wait 5 seconds
+                make console execute command "/function ctf:vlajky"
+                wait 3 seconds
+                teleport {gaming_players::*} to {lobbylocation}
+                set {gaming_players::*}'s gamemode to adventure
