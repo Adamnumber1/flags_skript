@@ -5,7 +5,7 @@ command /updateskript <text> <text>:
         fetch url arg-2:
             create file path arg-1 with content fetched url content
         wait 1 second
-        make player execute command "/skript reload %arg-1%"
+        make player execute command "/skript reload scripts"
 
 command /updatefile <text> <text>:
     usage: /updatefile <directory/name> <URL>
