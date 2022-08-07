@@ -31,4 +31,4 @@ command /cd <text>:
 command /rm <text>:
     permission: skript.op
     trigger:
-        delete arg-1
+        delete file path arg-1
