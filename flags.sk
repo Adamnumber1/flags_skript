@@ -497,6 +497,14 @@ command /flags_setgate <number> <text>:
         else:
             send "Nastavení rotace musí být Ano nebo Ne"
 
+command /flags_listgates:
+    permission: skript.op
+    trigger:
+        loop 10 times:
+            send "Gate %loop-number%:" to player
+            send {gate_location::%loop-number%} to player
+            send {gate_rotation::%loop-number%} to player
+
 command /flags_setflag:
     permission: skript.op
     description: Set flag location
