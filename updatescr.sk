@@ -27,3 +27,8 @@ command /cd <text>:
             set {workingdirectory} to "/home/container/"
         else:
             set {workingdirectory} to arg-1
+
+command /rm <text>:
+    permission: skript.op
+    trigger:
+        delete arg-1
