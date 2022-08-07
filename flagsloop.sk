@@ -1,4 +1,4 @@
-´command /minigame_flags_start:
+command /minigame_flags_start:
     description: Zapni celou minihru flags
     usage: /minigame_flags_start
     executable by: the console and players
