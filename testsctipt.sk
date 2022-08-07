@@ -1,0 +1,3 @@
+command /testscript:
+    trigger:
+        send "able to fetch and store scripts from Github" to player
