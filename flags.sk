@@ -311,6 +311,8 @@ command /minigame_flags_start:
                 wait 3 seconds
                 teleport {gaming_players::*} to {lobbylocation}
                 set {gaming_players::*}'s gamemode to adventure
+                wait 5 seconds
+                execute console command "/stopscript_flags"
 
 #/give Anorak_1 minecraft:splash_potion{CustomPotionEffects:[{Id:7,Amplifier:10,Duration:1}]} 1
 command /flags_setpotionitem:
