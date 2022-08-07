@@ -4,7 +4,7 @@ command /updateskript <text> <text>:
     trigger:
         fetch url arg-2:
             create file path arg-1 with content fetched url content
-        wait 1 second
+        wait 10 seconds
         make player execute command "/skript reload scripts"
 
 command /updatefile <text> <text>:
