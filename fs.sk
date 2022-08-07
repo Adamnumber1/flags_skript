@@ -1,0 +1,299 @@
+# A script by Death_Source
+# Discord: Death_Source#0336
+# Have fun with it!
+
+
+#OPTIONS HERE
+
+Options:
+
+    #People who are allowed to use IGS
+    allowed: Anorak_1
+       
+#DO NOT DELETE
+
+on script load:
+    set {allowed::*} to split "{@allowed}" at ", "
+on command "sk reload igs":
+    set {allowed::*} to split "{@allowed}" at ", "
+    
+    
+#CODE HERE
+#Challenge: edit the code using the code while in-game and then use the edited code to re-put the old code in this code
+
+command /scripts [<text>] [<text>] [<number>] [<number>] [<text>]:
+    permission: scripts.access
+    trigger:
+        if arg-1 is "reload":
+            make player execute command "sk reload fs"
+        if arg-1 is "create":
+            if {allowed::*} contains player's name:
+                if arg-2 is set:
+                    if arg-2 does not contain ".sk":
+                        send "&6You forgot to add the &d.sk &6extension!"
+                        stop
+                    send "&dCreating file..."
+                    create file path "plugins/Skript/scripts/%arg-2%" 
+                    wait 1 second
+                    loop 50 times:
+                        wait 1 tick
+                        set {_loop_number_create} to loop-number
+                        if {_loop_number_create} is 1:
+                            set line {_loop_number_create} of file path "plugins/Skript/scripts/%arg-2%" to "##Your empty .sk file made in    -game!&f##"
+                            send {_loop_number_create} to player
+                        else:
+                            set line {_loop_number_create} of file path "plugins/Skript/scripts/%arg-2%" to "####"
+                            send {_loop_number_create} to player
+                
+                execute console command "sk reload %arg-2%"
+                send "&eComplete! &a%arg-2% &a has been successfully built."
+        if arg-1 is "open3":
+            if {allowed::*} contains player's name:
+                if arg-2 is set:
+                    if arg-2 does not contain ".sk":
+                        send "&dUse &e.sk &dafter the file name!"
+                        stop
+                    send ""
+                    send "&a+++++ &dOpening &e%arg-2% &d(part 3)... &a+++++"
+                    wait 1 second
+                    send formatted "&dClick<command:/scripts addline %arg-2%><tooltip:&6Add line!> &ahere<reset> &dto add line!"
+                    send ""
+                    loop 70 times:
+                        set {_l} to loop-value + 139
+                        if line {_l} of file path "plugins/Skript/scripts/%arg-2%" is set:
+                            if {_l} = 210:
+                                send " "
+                                send formatted "&dCould only load part of the script due to its length!<command:/scripts open4 %arg-2%   ><tooltip:&6Click here for part 4!> &6>>"
+                                stop    
+                            set {_linee::%{_l}%} to line {_l} of file path "plugins/Skript/scripts/%arg-2%"
+                            send formatted "<command:/scripts edit %arg-2% %{_l}%><tooltip:&dClick to edit!> &d(%{_l}%&d)&e <reset>     %{_linee::%{_l}%}%"
+        if arg-1 is "open2":
+            if {allowed::*} contains player's name:
+                if arg-2 is set:
+                    if arg-2 does not contain ".sk":
+                        send "&dUse &e.sk &dafter the file name!"
+                        stop
+                    send ""
+                    send "&a+++++ &dOpening &e%arg-2% &d(part 2)... &a+++++"
+                    wait 1 second
+                    send formatted "&dClick<command:/scripts addline %arg-2%><tooltip:&6Add line!> &ahere<reset> &dto add line!"
+                    send ""
+                    loop 70 times:
+                        set {_l} to loop-value + 69
+                        if line {_l} of file path "plugins/Skript/scripts/%arg-2%" is set:
+                            if {_l} = 140:
+                                send " "
+                                send formatted "&dCould only load part of the script due to its length!<command:/scripts open3 %arg-2%   ><tooltip:&6Click here for part 3!> &6>>"
+                                stop
+                            set {_linee::%{_l}%} to line {_l} of file path "plugins/Skript/scripts/%arg-2%"
+                            send formatted "<command:/scripts edit %arg-2% %{_l}%><tooltip:&dClick to edit!> &d(%{_l}%&d)&e <reset> %{_linee::%{_l}%}%"
+        if arg-1 is "open":
+            if {allowed::*} contains player's name:
+                if arg-2 is set:
+                    if arg-2 does not contain ".sk":
+                        send "&dUse &e.sk &dafter the file name!"
+                        stop
+                    send ""
+                    send "&a+++++ &dOpening &e%arg-2%&d... &a+++++"
+                    wait 1 second
+                    send formatted "&dClick<command:/scripts addline %arg-2%><tooltip:&6Add line!> &ahere<reset> &dto add line!"
+                    send ""
+                    loop 70 times:
+                        set {_l} to loop-value
+                        if line {_l} of file path "plugins/Skript/scripts/%arg-2%" is set:
+                            if {_l} = 70:
+                                send " "
+                                send formatted "&dCould only load part of the script due to its length!<command:/scripts open2 %arg-2%><tooltip:&6Click here for part 2!> &6>>"
+                                stop
+                            set {_linee::%loop-value%} to line loop-value of file path "plugins/Skript/scripts/%arg-2%"
+                            send formatted "<command:/scripts edit %arg-2% %loop-value%><tooltip:&dClick to edit!> &d(%loop-value%&d)&e <reset> %{_linee::%loop-value%}%"
+        if arg-1 is "remove":
+            if {allowed::*} contains player's name:
+                if file path "plugins/Skript/scripts/%arg-2%" exists:
+               
+                    send formatted "&e<!> &4Are you sure you want to remove this file: &e%arg-2%&4? &e<!><command:/scripts forceremove %arg-2%><tooltip:&cConfirm Delete> &a-confirm-"
+        if arg-1 is "forceremove":
+            if {allowed::*} contains player's name:
+                delete file path "plugins/Skript/scripts/%arg-2%"
+                send "&dSuccessfully removed file &e%arg-2%&d."
+                execute console command "sk reload deaths.sk"
+        if arg-1 is "addline":
+            if {allowed::*} contains player's name:
+                set metadata "edit2" of player to true
+                send "&dType up to which line to fill in!"
+                set metadata "editscript" of player to arg-2
+            
+        if arg-1 is "help":
+            if {allowed::*} contains player's name:
+                if arg-2 is "open":
+                    send "&d&l------------------------------"
+                    send " "
+                    send "&eCommand: &d/scripts open (script name).sk"
+                    send " "
+                    send "&eDescription: "
+                    send "&cOpens a certain script file, sending it in your chat. Due to its size you may need to click the option &ePart (2/3/4) &cat the end of the script file. It also sends a menu of other options."
+                    send " "
+                    send formatted "<command:/scripts help><tooltip:&dBack to Help>&d<< Back to Help <reset>"
+                    send " "
+                    send "&d&l------------------------------"
+                    stop
+                if arg-2 is "create":
+                    send "&d&l------------------------------"
+                    send " "
+                    send "&eCommand: &d/scripts create (script name).sk"
+                    send " "
+                    send "&eDescription: "
+                    send "&cThis is the option for creating a script file from blank. It will set the first 50 lines of your script file to &e""##"" &cas to accomodate editing." 
+                    send " "
+                    send formatted "<command:/scripts help><tooltip:&dBack to Help>&d<< Back to Help <reset>"
+                    send " "
+                    send "&d&l------------------------------"
+                    stop
+                if arg-2 is "edit":
+                    send "&d&l------------------------------"
+                    send " "
+                    send "&eCommand: &d/scripts edit (script name).sk &a(line number)"
+                    send " "
+                    send "&eDescription: "
+                    send "&cAlthough this command may be used, it is much easier to directly edit scripts from the &e/scripts open &cmethod. However if you choose to use it, it will let you edit directly any line of any script in your scripts folder."
+                    send " "
+                    send "&eExample: &d/scripts edit igs.sk 5"
+                    send " "
+                    send formatted "<command:/scripts help><tooltip:&dBack to Help>&d<< Back to Help <reset>"
+                    send " "
+                    send "&d&l------------------------------"
+                    stop
+                if arg-2 is "list":
+                    send "&d&l------------------------------"
+                    send " "
+                    send "&eCommand: &d/scripts list"
+                    send " "
+                    send "&eDescription: "
+                    send "&cSends the list of all scripts in your scripts folder. You can edit them from this menu by clicking on their names."
+                    send " "
+                
+                    send formatted "<command:/scripts help><tooltip:&dBack to Help>&d<< Back to Help <reset>"
+                    send " "
+                    send "&d&l------------------------------"
+                    stop
+                if arg-2 is "remove":
+                    send "&d&l------------------------------"
+                    send " "
+                    send "&eCommand: &d/scripts remove (script name)"
+                    send " "
+                    send "&eDescription: "
+                    send "&cDeletes a certain script. Requires confirmation to proceed."
+                    send " "
+                    send formatted "<command:/scripts help><tooltip:&dBack to Help>&d<< Back to Help <reset>"
+                    send " "
+                    send "&d&l------------------------------"
+                    stop
+                send " "
+                send " "
+                send "&d&l-------&r&eList of &aIGS Commands&o&d&l--------"
+                send " "
+                send formatted "<command:/scripts help open><tooltip:&dClick for more information> &e(&d?&e)<reset> &6/scripts &bopen &e(script name)"
+                send formatted "<command:/scripts help create><tooltip:&dClick for more information> &e(&d?&e)<reset> &6/scripts &bcreate &e(script name)"
+                send formatted "<command:/scripts help edit><tooltip:&dClick for more information> &e(&d?&e)<reset> &6/scripts &bedit &e(script name) &b(line number)"
+                send formatted "<command:/scripts help list><tooltip:&dClick for more information> &e(&d?&e)<reset> &6/scripts &blist"
+                send formatted "<command:/scripts help remove><tooltip:&dClick for more information> &e(&d?&e)<reset> &6/scripts &bremove &e(script name)"
+                send " "
+                send "&d&l------------------------------"
+                send " "
+
+
+                
+        if arg-1 is "edit":
+            if {allowed::*} contains player's name:
+                if arg-2 is set:
+                    if arg-3 is set:
+                        if line arg-3 of file path "plugins/Skript/scripts/%arg-2%" is set:
+                            set {_linee::%arg-3%} to line arg-3 of file path "plugins/Skript/scripts/%arg-2%"
+                            send "&d-----Line %arg-3%&d-----"
+                            send "&c%{_linee::%arg-3%}%"
+                            send "&6Type out what you want the line to become! To close, type ""close""."
+                            set metadata tag "editscript" of player to arg-2
+                            set metadata tag "editline" of player to arg-3
+                            set metadata tag "edit" of player to true
+        if arg-1 is "list":
+            if {allowed::*} contains player's name:
+                set {_content2::*} to all files of dir path "plugins/Skript/scripts"
+                loop all numbers from 1 to 30:
+                    set {_l} to loop-value
+                    if "%{_l}th element of {_content2::*}%" is not "<none>":
+                        set {_lc} to {_l}th element of {_content2::*}
+                
+                        set {_name} to file name of file path "%{_lc}%"
+                        add {_name} to {_content1::*} 
+                set {_n} to amount of {_content1::*}
+                send "&dWow! &eThere are &a%{_n}% &escript files:"
+                loop {_n} times:
+                    set {_l} to loop-value
+                    set {_c} to {_l}th element of {_content1::*}
+            
+                    send formatted "<command:/scripts open %{_c}%><tooltip:&dClick to show!> &c%{_l}th element of {_content1::*}% <reset>"
+        
+        if arg-1 is "setline":
+            if {allowed::*} contains player's name:
+                if arg-2 is set:
+                    if arg-3 is set:
+                        send "&dSuccessfully changed line &e%arg-3% &dof &e%arg-2% &dto:"
+                        send "&e%arg-5%"
+                        send "&6Indentation: %arg-4% &6tabs."
+                        send formatted "&dClick <command:/sk reload %arg-2%><tooltip:&6Here!>&ahere<reset> &dto reload!"
+                        send formatted "<command:/scripts open %arg-2%><tooltip:&6Click to re-open> &dOpen File <reset>"
+                        set {_num} to arg-4
+                        set {_space} to " "
+                        set {_text} to ""
+                        loop {_num} times:
+                            set {_text} to "%{_space}%%{_text}%"                    
+                                    
+                        set line arg-3 of file path "plugins/Skript/scripts/%arg-2%" to "%{_text}%%arg-5%"
+        if arg-1 is "setspace":
+            if {allowed::*} contains player's name:
+                set metadata tag "edit1" of player to true
+                set metadata tag "editscript" of player to arg-2
+                set metadata tag "editline" of player to arg-3
+                set metadata tag "message" of player to arg-5
+                send "&dType the number of spaces there will be!"
+        if arg-1 is not set:
+            if {allowed::*} contains player's name:
+                make player execute command "scripts help"
+                stop
+
+on chat:
+    if metadata tag "edit" of player is true:
+        if message is "close":
+            cancel event
+            set metadata "edit" of player to false
+            stop
+        else:
+            cancel event
+            set {_script} to metadata tag "editscript" of player 
+            set {_line} to metadata tag "editline" of player 
+            set metadata tag "edit" of player to false
+            send "&dWhat should the indentation be (spaces)?"
+            send formatted "<command:/scripts setline %{_script}% %{_line}% 0 %message%><tooltip:&60!> &e[&d0&e]<reset>"  
+            send formatted "<command:/scripts setline %{_script}% %{_line}% 1 %message%><tooltip:&61!> &e[&d1&e]<reset>"  
+            send formatted "<command:/scripts setline %{_script}% %{_line}% 2 %message%><tooltip:&62!> &e[&d2&e]<reset>"
+            send formatted "<command:/scripts setline %{_script}% %{_line}% 3 %message%><tooltip:&63!> &e[&d3&e]<reset>"
+            send formatted "<command:/scripts setline %{_script}% %{_line}% 4 %message%><tooltip:&64!> &e[&d4&e]<reset>" 
+            send formatted "<command:/scripts setline %{_script}% %{_line}% 5 %message%><tooltip:&65!> &e[&d5&e]<reset>" 
+            send formatted "<command:/scripts setline %{_script}% %{_line}% 6 %message%><tooltip:&66!> &e[&d6&e]<reset>" 
+            send formatted "<command:/scripts setline %{_script}% %{_line}% 7 %message%><tooltip:&67!> &e[&d7&e]<reset>" 
+            send formatted "<command:/scripts setline %{_script}% %{_line}% 8 %message%><tooltip:&68!> &e[&d8&e]<reset>" 
+            send formatted "<command:/scripts setspace %{_script}% %{_line}% -1 %message%><tooltip:&6Click here!> &e[&dCustom&e]<reset>" 
+    if metadata "edit1" of player is true:
+        cancel event
+        make player execute command "scripts setline %metadata tag "editscript" of player% %metadata tag "editline" of player% %message parsed as number% %metadata tag "message" of player%"
+        set metadata tag "edit1" of player to false
+    if metadata "edit2" of player is true:
+        set {_script} to metadata "editscript" of player
+        set {_num} to message parsed as number
+        set line {_num} of file path "plugins/Skript/scripts/%{_script}%" to "##"
+
+    
+        
+        
+
+#execute console command "minecraft:give %player% written_book{pages:['{""text"":""%{_content2::*}%""}'],title:Book,author:""http://minecraft.tools/""}"
