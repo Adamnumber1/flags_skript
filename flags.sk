@@ -299,7 +299,7 @@ command /minigame_flags_start:
         hide {gaming_players::*}
         wait 1 seconds
         send "§e----------- Vlajky -----------" to {gaming_players::*}
-        send " V této minihře máte za úkol, jako první získat vlajku na středu, kterou vezmene pravím kliknutím a donést jí domů, ale pozor, protivník tě může dát na jednu rádu lukem, proto jsou po stranách instakill potiony, který můžeš použít jako obranu." to {gaming_players::*}
+        send " V této minihře máte za úkol jako první získat vlajku na středu, kterou vezmene pravím kliknutím a donést jí domů. Pozor, protivník vás může zabít na jednu ránu lukem! Po stranách jsou pak instakill potiony." to {gaming_players::*}
         wait 15 seconds
         set {stop_players} to "False"
         reveal {gaming_players::*}
@@ -322,7 +322,7 @@ command /minigame_flags_start:
                 set {teamscore::10} to 0
 
 
-                # //procesy před startem
+                # procesy před startem
 
                 set {flags_kola} to 1
                 clear inventory of all players
