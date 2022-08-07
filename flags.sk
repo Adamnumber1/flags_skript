@@ -79,17 +79,17 @@ command /minigame_flags_start:
 
                 wait 5 seconds
                 send title "§4§l%{flags_kola}%. KOLO" with subtitle "3" to all players
-                play sound "block.note_block.bell" at volume 50 to all players
+                play sound "custom.cas" at volume 50 to all players
                 wait 1 second
                 send title "§4§l%{flags_kola}%. KOLO" with subtitle "2" to all players
-                play sound "block.note_block.bell" at volume 50 to all players
+                play sound "custom.cas" at volume 50 to all players
                 spawngate(2)
                 wait 1 second
                 send title "§4§l%{flags_kola}%. KOLO" with subtitle "1" to all players
-                play sound "block.note_block.bell" at volume 50 to all players
+                play sound "custom.cas" at volume 50 to all players
                 wait 1 second
                 send title "GO" with subtitle "" to all players
-                play sound "block.note_block.bell" at volume 50 with pitch 18 to all players
+                play sound "custom.cas2" at volume 50 to all players
                 spawngate(1)
 
 
@@ -260,17 +260,17 @@ command /minigame_flags_start:
                     send title "§4§l%{flags_kola}%. KOLO" to all players
                     wait 5 second
                     send title "§4§l%{flags_kola}%. KOLO" with subtitle "3" to all players
-                    play sound "block.note_block.bell" at volume 50 to all players
+                    play sound "custom.cas" at volume 50 to all players
                     wait 1 second
                     send title "§4§l%{flags_kola}%. KOLO" with subtitle "2" to all players
-                    play sound "block.note_block.bell" at volume 50 to all players
+                    play sound "custom.cas" at volume 50 to all players
                     spawngate(2)
                     wait 1 second
                     send title "§4§l%{flags_kola}%. KOLO" with subtitle "1" to all players
-                    play sound "block.note_block.bell" at volume 50 to all players
+                    play sound "custom.cas" at volume 50 to all players
                     wait 1 second
                     send title "GO" with subtitle "" to all players
-                    play sound "block.note_block.bell" at volume 50 with pitch 18 to all players
+                    play sound "custom.cas2" at volume 50 to all players
                     spawngate(1)
 
                 set {flags_timer} to {čas_kola} # NASTAVENÍ ČASU
