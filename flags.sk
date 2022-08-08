@@ -382,6 +382,7 @@ on respawn:
         set player's gamemode to spectator
         teleport player to {spectatorlocation}
         wait 20 ticks
+        set player's gamemode to adventure
         set player's gamemode to spectator
 
 on food bar change:
