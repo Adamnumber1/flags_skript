@@ -100,12 +100,8 @@ command /minigame_flags_start:
                         if loop-value-2 is banner:
                             set block at loop-value-2 to air
                     loop dropped items in radius 35 around loop-value-1:
-                        if loop-value-2 is bow:
-                            kill loop-value-2
-                        if loop-value-2 is arrow:
-                            kill loop-value-2
-                        if loop-value-2 is potion:
-                            kill loop-value-2
+                        kill loop-value-2
+
 
                 loop 10 times:
                     loop entries of team "IDList%loop-number%":
