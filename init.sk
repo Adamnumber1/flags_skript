@@ -5,7 +5,7 @@ on load:
 
 on skript start:
     if file path "plugins/Skript/scripts/-flags.sk" is not missing:
-        delete "plugins/Skript/scripts/-flags.sk"
+        delete file path "plugins/Skript/scripts/-flags.sk"
     wait 1 second
     disable script file "flags.sk"
     set {flags_state} to "stop"
@@ -20,7 +20,7 @@ command /startscript_flags:
             disable script file "flags.sk"
             #delete file path "plugins/Skript/scripts/flags.sk"
         if file path "plugins/Skript/scripts/-flags.sk" is missing:
-            download from https://raw.githubusercontent.com/Adamnumber1/flags_skript/main/flags.sk to file path "plugins/Skript/scripts/-flags.sk":
+            download from "https://raw.githubusercontent.com/Adamnumber1/flags_skript/main/flags.sk" to file path "plugins/Skript/scripts/-flags.sk":
                 enable script file "flags.sk"
                 reload script "flags"
         enable script file "flags"
