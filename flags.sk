@@ -303,11 +303,11 @@ command /minigame_flags_start:
                 # VYHODNOCENÍ BODŮ
 
                 loop 10 times:
-                    execute console command "/scoreboard players add @a[scores={IDlist=%loop-number%}] Win %{teamscore::%loop-number%}%"
+                    execute console command "/scoreboard players set @a[scores={IDlist=%loop-number%}] Win %{teamscore::%loop-number%}%"
                     if loop-number is 10:
-                        execute console command "/scoreboard players add @a[scores={IDlist=20}] Win %{teamscore::%loop-number%}%"
+                        execute console command "/scoreboard players set @a[scores={IDlist=20}] Win %{teamscore::%loop-number%}%"
                     else:
-                        execute console command "/scoreboard players add @a[scores={IDlist=1%loop-number%}] Win %{teamscore::%loop-number%}%"
+                        execute console command "/scoreboard players set @a[scores={IDlist=1%loop-number%}] Win %{teamscore::%loop-number%}%"
 
                 set {game_on} to "False"
                 send "game stop"
