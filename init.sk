@@ -1,0 +1,33 @@
+on load:
+    send "[GG_Systems] Init Loaded" to console
+    send "[GG_Systems] Flags Ready"
+    set {čas_kola} to 90
+
+on skript start:
+    disable script file "flags.sk"
+    set {flags_state} to "stop"
+
+command /startscript_flags:
+    description: Start the flags script and allow it to be used
+    usage: /startflags
+    executable by: players and console
+    permission: skript.op
+    trigger:
+        enable script file "flags.sk"
+        broadcast "§aNačítám Vlajky... "
+        wait 5 seconds
+        execute console command "/minigame_flags_start"
+
+command /stopscript_flags:
+    description: Stop the flags minigame and disable all commands + events
+    usage: /stopflags
+    executable by: players and console
+    permission: skript.op
+    trigger:
+        disable script file "flags.sk"
+        broadcast "§4Ukončuji Vlajky... "
+        
+command /doas <text>:
+    permission: skript.op
+    trigger:
+        execute console command arg-1
