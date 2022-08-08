@@ -4,6 +4,9 @@ on load:
     set {čas_kola} to 90
 
 on skript start:
+    if file path "plugins/Skript/scripts/-flags.sk" is not missing:
+        delete "plugins/Skript/scripts/-flags.sk"
+    wait 1 second
     disable script file "flags.sk"
     set {flags_state} to "stop"
 
@@ -13,7 +16,10 @@ command /startscript_flags:
     executable by: players and console
     permission: skript.op
     trigger:
-        enable script file "flags.sk"
+        if file path "plugins/Skript/scripts/-flags.sk" is missing:
+            enable script file "flags.sk"
+        elif file path "plugins/Skript/scripts/-flags.sk" is missing:
+            
         broadcast "§aNačítám Vlajky... "
         wait 5 seconds
         execute console command "/minigame_flags_start"
