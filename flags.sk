@@ -51,7 +51,7 @@ command /minigame_flags_start:
                 set {flags_kola} to 1
                 clear inventory of all players
                 wait 20 ticks
-                send title "§4§l1. KOLO" to all players
+                send title "§c§l1. KOLO" to all players
 
                 if {flags_kola} is 1:
                     spawngate(3)
@@ -78,14 +78,14 @@ command /minigame_flags_start:
                     set {flags_timer} to {čas_kola}
 
                 wait 5 seconds
-                send title "§4§l%{flags_kola}%. KOLO" with subtitle "3" to all players
+                send title "§c§l%{flags_kola}%. KOLO" with subtitle "3" to all players
                 play sound "custom.cas" at volume 50 to all players
                 wait 1 second
-                send title "§4§l%{flags_kola}%. KOLO" with subtitle "2" to all players
+                send title "§c§l%{flags_kola}%. KOLO" with subtitle "2" to all players
                 play sound "custom.cas" at volume 50 to all players
                 spawngate(2)
                 wait 1 second
-                send title "§4§l%{flags_kola}%. KOLO" with subtitle "1" to all players
+                send title "§c§l%{flags_kola}%. KOLO" with subtitle "1" to all players
                 play sound "custom.cas" at volume 50 to all players
                 wait 1 second
                 send title "GO" with subtitle "" to all players
@@ -257,16 +257,16 @@ command /minigame_flags_start:
                     set {game_status} to "end"
                 else:
 
-                    send title "§4§l%{flags_kola}%. KOLO" to all players
+                    send title "§c§l%{flags_kola}%. KOLO" to all players
                     wait 5 second
-                    send title "§4§l%{flags_kola}%. KOLO" with subtitle "3" to all players
+                    send title "§c§l%{flags_kola}%. KOLO" with subtitle "3" to all players
                     play sound "custom.cas" at volume 50 to all players
                     wait 1 second
-                    send title "§4§l%{flags_kola}%. KOLO" with subtitle "2" to all players
+                    send title "§c§l%{flags_kola}%. KOLO" with subtitle "2" to all players
                     play sound "custom.cas" at volume 50 to all players
                     spawngate(2)
                     wait 1 second
-                    send title "§4§l%{flags_kola}%. KOLO" with subtitle "1" to all players
+                    send title "§c§l%{flags_kola}%. KOLO" with subtitle "1" to all players
                     play sound "custom.cas" at volume 50 to all players
                     wait 1 second
                     send title "GO" with subtitle "" to all players
@@ -280,7 +280,7 @@ command /minigame_flags_start:
                 set {flags_timer} to {flags_timer} - 1
                 wait 1 second
                 if {flags_timer} is 0:
-                    send title "§4§lDošel čas!" to all players
+                    send title "§c§lDošel čas!" to all players
                     set {gaming_players::*}'s gamemode to spectator
                     set {game_status} to "next"
                     wait 5 seconds
@@ -289,7 +289,7 @@ command /minigame_flags_start:
                     set {game_status} to "next"
                     set {gaming_players::*}'s gamemode to spectator
                     wait 1 second
-                    send title "§a§lKonec kola!" to all players
+                    send title "§c§lKonec kola!" to all players
                     wait 5 seconds
 
             if {game_status} is "end":
