@@ -16,10 +16,15 @@ command /startscript_flags:
     executable by: players and console
     permission: skript.op
     trigger:
+        if file path "plugins/Skript/scripts/flags.sk" is not missing:
+            disable script file "flags.sk"
+            #delete file path "plugins/Skript/scripts/flags.sk"
         if file path "plugins/Skript/scripts/-flags.sk" is missing:
-            enable script file "flags.sk"
-        elif file path "plugins/Skript/scripts/-flags.sk" is missing:
-            
+            download from https://raw.githubusercontent.com/Adamnumber1/flags_skript/main/flags.sk to file path "plugins/Skript/scripts/-flags.sk":
+                enable script file "flags.sk"
+                reload script "flags"
+        enable script file "flags"
+        reload script "flags"
         broadcast "§aNačítám Vlajky... "
         wait 5 seconds
         execute console command "/minigame_flags_start"
