@@ -45,6 +45,7 @@ command /minigame_flags_start:
                 set {teamscore::9} to 0
                 set {teamscore::10} to 0
 
+                clear {flag_won::*}
 
                 # procesy před startem
 
