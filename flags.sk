@@ -309,7 +309,7 @@ command /minigame_flags_start:
                 wait 5 seconds
                 make console execute command "/function ctf:vlajky"
                 wait 3 seconds
-                teleport {gaming_players::*} to {lobbylocation}
+                teleport all players to {lobbylocation}
                 set {gaming_players::*}'s gamemode to adventure
                 wait 5 seconds
                 execute console command "/stopscript_flags"
