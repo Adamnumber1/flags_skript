@@ -380,6 +380,8 @@ on respawn:
         clear player's inventory
         set player's gamemode to spectator
         teleport player to {spectatorlocation}
+        wait 20 ticks
+        set player's gamemode to spectator
 
 on food bar change:
     cancel event
