@@ -5,7 +5,8 @@ on load:
 
 on skript start:
     if file path "plugins/Skript/scripts/-flags.sk" is not missing:
-        delete file path "plugins/Skript/scripts/-flags.sk"
+        if file path "plugins/Skript/scripts/flags.sk" is not missing:
+            delete file path "plugins/Skript/scripts/-flags.sk"
     wait 1 second
     disable script file "flags.sk"
     set {flags_state} to "stop"
