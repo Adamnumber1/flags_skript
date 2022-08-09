@@ -82,17 +82,17 @@ on placeholderapi placeholder request for the prefix "game":
         else:  # {teampoints_reset} < 0:
             set {teampoints_reset} to {teampoints_reset} - 1
         if prefix of team {1stteam} is set:
-            set the result to prefix of team {1stteam}
+            set the result to "%prefix of team {1stteam}%%{teampoints::IDList%{1stteam}%}%"
         else:
             set the result to "&7-"
         #set {new::*} to sorted {play::*}
     if the identifier is "poradi2":
         if prefix of team {2stteam} is set:
-            set the result to prefix of team {2stteam}
+            set the result to "%prefix of team {2stteam}%%{teampoints::IDList%{2stteam}%}%"
         else:
             set the result to "&7-"
     if the identifier is "poradi3":
         if prefix of team {3stteam} is set:
-            set the result to prefix of team {3stteam}
+            set the result to "%prefix of team {3stteam}%%{teampoints::IDList%{3stteam}%}%"
         else:
             set the result to "&7-"
