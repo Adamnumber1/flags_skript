@@ -3,6 +3,11 @@ command /scoreupdate:
     trigger:
         set {teampoints_reset} to 0
 
+on join:
+	set join message to "§e%player% se připojil."
+
+on quit:
+	set leave message to "§e%player% se odpojil."
 
 on placeholderapi placeholder request for the prefix "player":
     if the identifier is "teammate": # The placeholder would be 'custom_message'
@@ -32,28 +37,44 @@ on placeholderapi placeholder request for the prefix "game":
     if the identifier is "poradi1":
         if {teampoints_reset} < 0:
             set {_lu} to "Anorak_1" parsed as player
+            clear {team_all_points::*}
             loop 10 times:
+                clear {_team_point}
                 loop entries of team "IDList%loop-number%":
                     clear {_team_points::*}
                     clear {_team_point}
                     add placeholder "objective_score_GridoGames" from loop-value-2 to {_team_points::*}
                 loop {_team_points::*}:
                     set {_team_point} to {_team_point} + loop-value-2 parsed as integer
-                    
-                set {teampoints::IDList%loop-number%} to {_team_point}
-                add {_team_point} to {team_all_points::*}
-            set {team_all_point::*} to sorted {team_all_points::*}
+                if entries of team "IDList%loop-number%" is set:
+                    set {teampoints::IDList%loop-number%} to {_team_point}
+                    add {_team_point} to {team_all_points::*}
+            set {team_all_point::*} to reversed sorted {team_all_points::*}
             
-            set {1stteam} to ""
-            set {2stteam} to ""
-            set {3stteam} to ""
+            clear {1stteam}
+            clear {2stteam}
+            clear {3stteam}
+            set {1stset} to ""
+            set {2stset} to ""
+            set {3stset} to ""
             loop 10 times:
-                if 1st element of {team_all_points::*} is {teampoints::IDList%loop-number%}:
-                    set {1stteam} to "IDList%loop-number%"
-                if 2st element of {team_all_points::*} is {teampoints::IDList%loop-number%}:
-                    set {2stteam} to "IDList%loop-number%"
-                if 3st element of {team_all_points::*} is {teampoints::IDList%loop-number%}:
-                    set {3stteam} to "IDList%loop-number%"
+                if 3st element of {team_all_point::*} is {teampoints::IDList%loop-number%}:
+                    if {3stteam} is not set:
+                        set {3stteam} to "IDList%loop-number%"
+                        #remove "IDList%loop-number%" from {_teams::*}
+                        set {3stset} to "True"
+                        continue
+                if 2st element of {team_all_point::*} is {teampoints::IDList%loop-number%}:
+                    if {2stteam} is not set:
+                        set {2stteam} to "IDList%loop-number%"
+                        #remove "IDList%loop-number%" from {_teams::*}
+                        set {2stset} to "True"
+                        continue
+                if 1st element of {team_all_point::*} is {teampoints::IDList%loop-number%}:
+                    if {1stteam} is not set:
+                        set {1stteam} to "IDList%loop-number%"
+                        #remove "IDList%loop-number%" from {_teams::*}
+                        set {1stset} to "True"
 
             # reset loop
             
