@@ -1,0 +1,77 @@
+command /scoreupdate:
+    permission: skript.op
+    trigger:
+        set {teampoints_reset} to 0
+
+
+on placeholderapi placeholder request for the prefix "player":
+    if the identifier is "teammate": # The placeholder would be 'custom_message'
+        loop entries of team placeholder "team_name" from player:
+            if loop-value is not player:
+                add "%loop-value% §a%loop-value's health * 2%%placeholder "team_color" from player%❤" to {_team_players::*}
+        if {_team_players::*} is not set:
+            set the result to "&7-"
+        else:
+            set the result to "%{_team_players::*}%"
+    if the identifier is "myself":
+        set the result to "%player% §a%player's health * 2%%placeholder "team_color" from player%❤"
+    if the identifier is "teampoints":
+        loop entries of team placeholder "team_name" from player:
+            add placeholder "objective_score_GridoGames" from loop-value to {_team_points::*}
+        loop {_team_points::*}:
+            set {_team_point} to {_team_point} + loop-value parsed as integer
+        set the result to "%{_team_point}%"
+
+on placeholderapi placeholder request for the prefix "game":
+    if the identifier is "kola":
+        set {_name} to "Kola" parsed as offline player 
+        set the result to placeholder "objective_score_XD" from {_name}
+    if the identifier is "hra":
+        set {_name} to "Hry" parsed as offline player 
+        set the result to placeholder "objective_score_XD" from {_name}
+    if the identifier is "poradi1":
+        if {teampoints_reset} < 0:
+            set {_lu} to "Anorak_1" parsed as player
+            loop 10 times:
+                loop entries of team "IDList%loop-number%":
+                    clear {_team_points::*}
+                    clear {_team_point}
+                    add placeholder "objective_score_GridoGames" from loop-value-2 to {_team_points::*}
+                loop {_team_points::*}:
+                    set {_team_point} to {_team_point} + loop-value-2 parsed as integer
+                    
+                set {teampoints::IDList%loop-number%} to {_team_point}
+                add {_team_point} to {team_all_points::*}
+            set {team_all_point::*} to sorted {team_all_points::*}
+            
+            set {1stteam} to ""
+            set {2stteam} to ""
+            set {3stteam} to ""
+            loop 10 times:
+                if 1st element of {team_all_points::*} is {teampoints::IDList%loop-number%}:
+                    set {1stteam} to "IDList%loop-number%"
+                if 2st element of {team_all_points::*} is {teampoints::IDList%loop-number%}:
+                    set {2stteam} to "IDList%loop-number%"
+                if 3st element of {team_all_points::*} is {teampoints::IDList%loop-number%}:
+                    set {3stteam} to "IDList%loop-number%"
+
+            # reset loop
+            
+            set {teampoints_reset} to 100
+        else:  # {teampoints_reset} < 0:
+            set {teampoints_reset} to {teampoints_reset} - 1
+        if prefix of team {1stteam} is set:
+            set the result to prefix of team {1stteam}
+        else:
+            set the result to "&7-"
+        #set {new::*} to sorted {play::*}
+    if the identifier is "poradi2":
+        if prefix of team {2stteam} is set:
+            set the result to prefix of team {2stteam}
+        else:
+            set the result to "&7-"
+    if the identifier is "poradi3":
+        if prefix of team {3stteam} is set:
+            set the result to prefix of team {3stteam}
+        else:
+            set the result to "&7-"
