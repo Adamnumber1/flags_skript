@@ -14,7 +14,7 @@ on placeholderapi placeholder request for the prefix "player":
         loop entries of team placeholder "team_name" from player:
             if loop-value is not player:
                 if loop-value's gamemode is spectator:
-                    add "&7%loop-value% ☠" to {_team_players::*}
+                    add "§m&7%loop-value% ☠" to {_team_players::*}
                 else:
                     add "%loop-value% §a%loop-value's health * 2%%placeholder "team_color" from player%❤" to {_team_players::*}
         if {_team_players::*} is not set:
