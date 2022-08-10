@@ -42,7 +42,7 @@ on placeholderapi placeholder request for the prefix "game":
             clear {team_all_points::*}
             loop 10 times:
                 clear {_team_point}
-		        clear {_team_points::*}
+		clear {_team_points::*}
                 loop entries of team "IDList%loop-number%":
                     add placeholder "objective_score_GridoGames" from loop-value-2 to {_team_points::*}
                 loop {_team_points::*}:
