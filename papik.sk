@@ -102,7 +102,7 @@ on placeholderapi placeholder request for the prefix "game":
     if the identifier is "poradi3":
         if prefix of team {3stteam} is set:
             if {teampoints::%{3stteam}%} is 0:
-	        set the result to "&7-"
+                set the result to "&7-"
             else:
                 set the result to "%prefix of team {3stteam}% &r%{teampoints::%{3stteam}%}%"
         else:
