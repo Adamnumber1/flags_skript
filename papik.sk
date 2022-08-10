@@ -18,8 +18,10 @@ on placeholderapi placeholder request for the prefix "player":
             set the result to "&7-"
         else:
             set the result to "%{_team_players::*}%"
+    
     if the identifier is "myself":
         set the result to "%player% §a%player's health * 2%%placeholder "team_color" from player%❤"
+    
     if the identifier is "teampoints":
         loop entries of team placeholder "team_name" from player:
             add placeholder "objective_score_GridoGames" from loop-value to {_team_points::*}
@@ -40,9 +42,8 @@ on placeholderapi placeholder request for the prefix "game":
             clear {team_all_points::*}
             loop 10 times:
                 clear {_team_point}
+		        clear {_team_points::*}
                 loop entries of team "IDList%loop-number%":
-                    clear {_team_points::*}
-                    clear {_team_point}
                     add placeholder "objective_score_GridoGames" from loop-value-2 to {_team_points::*}
                 loop {_team_points::*}:
                     set {_team_point} to {_team_point} + loop-value-2 parsed as integer
