@@ -79,7 +79,7 @@ on placeholderapi placeholder request for the prefix "game":
 
             # reset loop
             
-            set {teampoints_reset} to 100
+            set {teampoints_reset} to 60
         else:  # {teampoints_reset} < 0:
             set {teampoints_reset} to {teampoints_reset} - 1
 
