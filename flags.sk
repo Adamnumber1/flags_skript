@@ -324,7 +324,7 @@ command /flags_setpotionitem:
     permission: skript.op
     trigger:
         clear player's inventory
-        execute console command "/give %player% minecraft:splash_potion{CustomPotionEffects:[{Id:7,Amplifier:10,Duration:1}]} 1"
+        execute console command "/give %player% minecraft:lingering_potion{CustomPotionEffects:[{Id:7,Amplifier:10,Duration:1}]} 1"
         set {dmgpotion} to player's held item
         clear player's inventory
 
